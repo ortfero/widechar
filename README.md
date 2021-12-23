@@ -4,7 +4,7 @@ Conversion between std::string and std::wstring
 
 ## Usage
 
-Drop `widechar` at your include path
+Drop `include/widechar` at your include path
 
 ## Supported platforms and compilers
 
