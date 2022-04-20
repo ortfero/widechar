@@ -115,19 +115,19 @@ namespace widechar {
         inline void
         code_point_to_utf8(char32_t cp, unsigned char*& octets) noexcept {
             if(cp <= 0x7F) {
-                octets[0] = cp;
+                octets[0] = static_cast<unsigned char>(cp);
                 ++octets;
             } else if(cp <= 0x7FF) {
-                octets[0] = 0xC0 | (cp >> 6);
+                octets[0] = static_cast<unsigned char>(0xC0 | (cp >> 6));
                 octets[1] = 0x80 | (cp & 0x3F);
                 octets += 2;
             } else if(cp <= 0xFFFF) {
-                octets[0] = 0xE0 | (cp >> 12);
+                octets[0] = static_cast<unsigned char>(0xE0 | (cp >> 12));
                 octets[1] = 0x80 | ((cp >> 6) & 0x3F);
                 octets[2] = 0x80 | (cp & 0x3F);
                 octets += 3;
             } else if(cp <= 0x10FFFF) {
-                octets[0] = 0xF0 | (cp >> 18);
+                octets[0] = static_cast<unsigned char>(0xF0 | (cp >> 18));
                 octets[1] = 0x80 | ((cp >> 12) & 0x3F);
                 octets[2] = 0x80 | ((cp >> 6) & 0x3F);
                 octets[3] = 0x80 | (cp & 0x3F);
