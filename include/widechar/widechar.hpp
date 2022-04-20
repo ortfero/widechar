@@ -1,6 +1,7 @@
 // This file is part of widechar library
 // Copyright 2021-2022 Andrei Ilin <ortfero@gmail.com>
 // SPDX-License-Identifier: MIT
+
 #pragma once
 
 
@@ -20,12 +21,28 @@ namespace widechar {
                 ns[i] = static_cast<char>(ws[i]);
             return ns;
         }
+		
+		
+		inline std::string narrow(std::wstring_view wsv) {
+			auto ns = std::string(wsv.size(), char{});
+            for(std::size_t i = 0; i != wsv.size(); ++i)
+                ns[i] = static_cast<char>(wsv[i]);
+            return ns;
+		}
 
 
         inline std::wstring wide(std::string const& ns) {
             std::wstring ws(ns.size(), wchar_t{});
             for(std::size_t i = 0; i != ns.size(); ++i)
                 ws[i] = static_cast<wchar_t>(ns[i]);
+            return ws;
+        }
+		
+		
+		inline std::wstring wide(std::string_view sv) {
+            std::wstring ws(sv.size(), wchar_t{});
+            for(std::size_t i = 0; i != sv.size(); ++i)
+                ws[i] = static_cast<wchar_t>(sv[i]);
             return ws;
         }
         
@@ -148,14 +165,14 @@ namespace widechar {
 
         
     } // namespace detail
-
-
-    inline std::string narrow(std::wstring const& ws) {
-        std::string ns(ws.size() * 4, char{});
+	
+	
+	inline std::string narrow(std::wstring_view wsv) {
+		std::string ns(wsv.size() * 4, char{});
 #if defined(_WIN32)
-        auto from = reinterpret_cast<char16_t const*>(ws.data());
+        auto from = reinterpret_cast<char16_t const*>(wsv.data());
 #else
-        auto from = reinterpret_cast<char32_t const*>(ws.data());
+        auto from = reinterpret_cast<char32_t const*>(wsv.data());
 #endif
         auto to = reinterpret_cast<unsigned char*>(ns.data());
         while(*from != '\0') {
@@ -169,12 +186,17 @@ namespace widechar {
         }
         ns.resize(reinterpret_cast<char*>(to) - ns.data());
         return ns;
+	}
+
+
+    inline std::string narrow(std::wstring const& ws) {
+        return narrow(std::wstring_view{ws.data(), ws.size()});
     }
-
-
-    std::wstring wide(std::string const& ns) {
-        std::wstring ws(ns.size(), wchar_t{});
-        auto from = reinterpret_cast<unsigned char const*>(ns.data());
+	
+	
+	inline std::wstring wide(std::string_view sv) {
+        std::wstring ws(sv.size(), wchar_t{});
+        auto from = reinterpret_cast<unsigned char const*>(sv.data());
 #if defined(_WIN32)
         auto to = reinterpret_cast<char16_t*>(ws.data());
 #else
@@ -191,6 +213,11 @@ namespace widechar {
         }
         ws.resize(reinterpret_cast<wchar_t*>(to) - ws.data());
         return ws;
+	}
+
+
+    inline std::wstring wide(std::string const& ns) {
+        return wide(std::string_view{ns.data(), ns.size()});
     }    
 
 
