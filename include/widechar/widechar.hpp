@@ -14,29 +14,23 @@ namespace widechar {
 
 
     namespace ascii {
-
-        inline std::string narrow(std::wstring const& ws) {
-            auto ns = std::string(ws.size(), char{});
-            for(std::size_t i = 0; i != ws.size(); ++i)
-                ns[i] = static_cast<char>(ws[i]);
-            return ns;
-        }
-		
-		
+	
 		inline std::string narrow(std::wstring_view wsv) {
 			auto ns = std::string(wsv.size(), char{});
             for(std::size_t i = 0; i != wsv.size(); ++i)
                 ns[i] = static_cast<char>(wsv[i]);
             return ns;
 		}
-
-
-        inline std::wstring wide(std::string const& ns) {
-            std::wstring ws(ns.size(), wchar_t{});
-            for(std::size_t i = 0; i != ns.size(); ++i)
-                ws[i] = static_cast<wchar_t>(ns[i]);
-            return ws;
+		
+		
+		inline std::string narrow(std::wstring const& ws) {
+            return narrow(std::wstring_view{ws.data(), ws.size()});
         }
+		
+		
+		inline std::string narrow(wchar_t const* ws) {
+			return narrow(std::wstring_view{ws});
+		}
 		
 		
 		inline std::wstring wide(std::string_view sv) {
@@ -45,7 +39,17 @@ namespace widechar {
                 ws[i] = static_cast<wchar_t>(sv[i]);
             return ws;
         }
-        
+
+
+        inline std::wstring wide(std::string const& ns) {
+            return wide(std::string_view{ns.data(), ns.size()});
+        }
+		
+		
+		inline std::wstring wide(char const* ns) {
+			return wide(std::string_view{ns});
+		}
+		   
     } // namespace ascii
 
 
@@ -194,6 +198,11 @@ namespace widechar {
     }
 	
 	
+	inline std::string narrow(wchar_t const* ws) {
+		return narrow(std::wstring_view{ws});
+	}
+	
+	
 	inline std::wstring wide(std::string_view sv) {
         std::wstring ws(sv.size(), wchar_t{});
         auto from = reinterpret_cast<unsigned char const*>(sv.data());
@@ -218,7 +227,11 @@ namespace widechar {
 
     inline std::wstring wide(std::string const& ns) {
         return wide(std::string_view{ns.data(), ns.size()});
-    }    
-
+    }
+	
+	
+	inline std::wstring wide(char const* ns) {
+		return wide(std::string_view{ns});
+	}
 
 } // namespace uutf8

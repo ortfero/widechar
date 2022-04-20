@@ -7,22 +7,22 @@
 TEST_SUITE("widechar") {
 
     TEST_CASE("ascii::narrow") {
-        REQUIRE_EQ(widechar::ascii::narrow(std::wstring_view{L"qwerty"}), "qwerty");
+        REQUIRE_EQ(widechar::ascii::narrow(L"qwerty"), "qwerty");
     }
 
 
     TEST_CASE("ascii::wide") {
-        REQUIRE_EQ(widechar::ascii::wide(std::string_view{"qwerty"}), L"qwerty");
+        REQUIRE_EQ(widechar::ascii::wide("qwerty"), L"qwerty");
     }
 
 
     TEST_CASE("narrow") {
-        REQUIRE_EQ(widechar::narrow(std::wstring_view{L"qwerty"}), "qwerty");
+        REQUIRE_EQ(widechar::narrow(L"qwerty"), "qwerty");
     }
 
 
     TEST_CASE("wide") {
-        REQUIRE_EQ(widechar::wide(std::string_view{"qwerty"}), L"qwerty");
+        REQUIRE_EQ(widechar::wide("qwerty"), L"qwerty");
     }
 
 }
